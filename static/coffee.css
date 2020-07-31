@@ -11,3 +11,81 @@ body {
 h4{
     text-align: left;
 }
+
+main {
+  display: grid;
+  grid-template:
+    'menu cart' minmax(200px, auto)
+    'status status' auto / 1fr 1fr;
+  margin-bottom: 100px;
+}
+
+#menu {
+  grid-area: menu;
+  margin-right: 1em;
+}
+
+#your-cart {
+  grid-area: cart;
+  padding-top: 50px;
+}
+
+#order-status {
+  grid-area: status;
+  padding-top: 30px;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+th {
+  text-align: left;
+  padding: 0.25em;
+}
+
+thead tr {
+  background: #4E2A2A;
+  color: white;
+}
+
+td {
+  padding: 0.5em 0.25em;
+}
+
+.add-to-order, #place-order {
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+h2 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.2em;
+}
+
+#order-status div {
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  padding: 0 1em;
+}
+
+#order-progress {
+  width: 100%;
+}
+
+#order-status-message {
+  text-align: center;
+  font-style: italic;
+}
+
+#your-cart h2 {
+  font-size: 12px;
+  display: grid;
+  grid-template: 'total place' auto / 1fr 1fr;
+}
+
+button {
+  font-family: 'Raleway', sans-serif;
+}

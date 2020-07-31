@@ -1,71 +1,155 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Hackbright Coffee Shop</title>
 
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <link href="static/coffee.css" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous">
+        </script>
 </head>
+
 <body>
-<div class="container">
-    <div class="starter-template">
-        <h1>Coffee Shop</h1>
-        <br>
+    <div class="container">
+        <div class="starter-template">
+            <h1>Coffee Shop</h1>
+            <br>
 
-        <img id="coffee_image" src="LOLWUT" alt="make this image work" height="300" width="200">
+            <input type="image" id="coffee_image" src="LOLWUT" alt="make this image work" height="300" width="200">
 
-        <h3 id="message">Click The Image To Order Coffee</h3>
+            <h3 id="message">Click The Image To Order Coffee</h3>
 
-        <table class="table">
-            <tr>
-                <td class="col-md-2">
-                    <button class="btn btn-default" id="espresso">Espresso</button>
-                </td>
-                <td class="col-md-2">
-                    <button class="btn btn-default" id="latte">Latte</button>
-                </td>
-                <td class="col-md-2">
-                    <button class="btn btn-default" id="hot-chocolate">Hot Chocolate</button>
-                </td>
-            </tr>
-            <tr>
-                <td>$3.25</td>
-                <td>$4.15</td>
-                <td>$2.50</td>
-            </tr>
-        </table>
+            <table class="table">
+                <tr>
+                    <td class="col-md-2">
+                        <button class="btn btn-default" id="espresso">Espresso</button>
+                    </td>
+                    <td class="col-md-2">
+                        <button class="btn btn-default" id="latte">Latte</button>
+                    </td>
+                    <td class="col-md-2">
+                        <button class="btn btn-default" id="hot-chocolate">Hot Chocolate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>$3.25</td>
+                    <td>$4.15</td>
+                    <td>$2.50</td>
+                </tr>
+            </table>
 
-        <h4>Total: <span id="revenue"><!-- Revenue Message will show up here --></span></h4>
+
+            <section id="your-cart">
+                <h1>Your Cart</h1>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="cart-items"></tbody>
+                </table>
+
+                <h2>
+                    <div>
+                        <h4>
+                            Revenue Total: <span id="revenue"></span>
+                        </h4>
+                    </div>
+                    <!-- <div>
+                        <button id="place-order">Place Order</button>
+                    </div> -->
+                </h2>
+            </section>
+
+            <section id="order-status">
+                <h1>Order Status</h1>
+                <div>
+                    <progress id="order-progress" max="100" value="0"></progress>
+
+                    <p id="order-status-message"></p>
+                </div>
+            </section>
+
+            <!-- <h2>
+                <div>
+                    <button class="btn btn-default" id="new-order">Create New Order</button>
+                </div>
+            </h2> -->
+
+
+        </div>
     </div>
-</div>
 
-<script>
-    "use strict";
+    <script>
+        "use strict";
 
-    var myImage = document.getElementById("coffee_image");
-    var myRevenueMessage = document.getElementById("revenue");
+        $('#coffee_image').attr('src', 'static/coffee_beans.jpg');
 
-    myImage.setAttribute("src", "static/coffee_beans.jpg");
+        $('#coffee_image').on('click', () => {
+            makeCoffee();
+        });
 
-    myImage.addEventListener("click", makeCoffee);
+        let total = 0;
+        $('#revenue').html(total)
 
-    function makeCoffee() {
-         myImage.src = "static/coffee_machine.jpg";
+        $('button').on('click', (evt) => {
+            updateRevenue(evt.target);
+            addItemToCart(evt.target);
+        });
 
-         setTimeout(function() {
-             myImage.setAttribute("src", "static/coffee_mug.jpg");
-         }, 1500);
 
-         setTimeout(function() {
-             myImage.setAttribute("src", "static/coffee_beans.jpg");
-         }, 4000);
-    }
+        function makeCoffee() {
+            // Rotates through coffee images after initial image is clicked.
 
-</script>
+            $('#coffee_image').attr('src', 'static/coffee_machine.jpg');
+            $(`order-status-message`).html("Please wait, we're making the coffe.")
+            $('#order-progress').attr('value', 50);
+
+            setTimeout(function () {
+                $('#coffee_image').attr('src', 'static/coffee_mug.jpg');
+                $(`order-status-message`).html("Your coffee is ready!")
+                $('#order-progress').attr('value', 100);
+            }, 1500);
+
+            setTimeout(function () {
+                $('#coffee_image').attr('src', 'static/coffee_beans.jpg');
+                $('#order-progress').attr('value', 0);
+                $('#cart-items').empty();
+
+            }, 4000);
+        }
+
+        function updateRevenue(target) {
+            // Updates the revenue total in the html when a coffe button is clicked.
+
+            if (target.id === 'espresso') {
+                total += 3.25;
+            } else if (target.id === 'latte') {
+                total += 4.15;
+            } else if (target.id === 'hot-chocolate') {
+                total += 2.50;
+            }
+
+            $('#revenue').html(`$${total.toFixed(2)}`);
+        };
+
+        function addItemToCart(target) {
+            $('#cart-items').append(`
+            <tr>
+                <td>${target.id}</td>
+            </tr>
+            `);
+        };
+
+    </script>
 
 </body>
+
 </html>
